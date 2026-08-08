@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  name          String
+  email         String         @unique
+  password      String
+  createdAt     DateTime       @default(now()) @map("created_at")
+  habits        Habit[]
+  reflections   DailyReflection[]
+  monthlyStats  MonthlyStat[]
+
+  @@map("users")
+}
+
+model Habit {
+  id           Int            @id @default(autoincrement())
+  userId       Int            @map("user_id")
+  name         String
+  category     String?
+  icon         String         @default("✅")
+  color        String         @default("#3b82f6")
+  displayOrder Int            @default(0) @map("display_order")
+  isActive     Boolean        @default(true) @map("is_active")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  records      HabitRecord[]
+  monthlyStats MonthlyStat[]
+
+  @@map("habits")
+}
+
+model HabitRecord {
+  id          Int      @id @default(autoincrement())
+  habitId     Int      @map("habit_id")
+  date        String
+  completed   Boolean  @default(false)
+  completedAt DateTime? @map("completed_at")
+  
+  habit       Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
+  @@unique([habitId, date])
+  @@map("habit_records")
+}
+
+model DailyReflection {
+  id            Int      @id @default(autoincrement())
+  userId        Int      @map("user_id")
+  date          String
+  mood          String?
+  energy        Int?
+  remarks       String?
+  tomorrowFocus String?  @map("tomorrow_focus")
+  createdAt     DateTime @default(now()) @map("created_at")
+  
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@map("daily_reflections")
+}
+
+model MonthlyStat {
+  id                 Int      @id @default(autoincrement())
+  habitId            Int      @map("habit_id")
+  month              Int
+  year               Int
+  completedDays      Int      @default(0) @map("completed_days")
+  missedDays         Int      @default(0) @map("missed_days")
+  completionPercentage Float  @default(0) @map("completion_percentage")
+  currentStreak      Int      @default(0) @map("current_streak")
+  longestStreak      Int      @default(0) @map("longest_streak")
+  lastUpdated        DateTime @updatedAt @map("last_updated")
+  
+  habit              Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             Int      @map("user_id")
+
+  @@unique([habitId, month, year])
+  @@map("monthly_statistics")
+}
