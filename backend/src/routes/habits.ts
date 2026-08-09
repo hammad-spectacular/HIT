@@ -20,9 +20,7 @@ router.get('/', async (req: AuthRequest, res) => {
 
 router.post('/', async (req: AuthRequest, res) => {
   const schema = z.object({
-    name: z.string().min(1),
-    category: z.string().optional(),
-    icon: z.string().optional(),
+      name: z.string().min(1).max(20),
     color: z.string().optional(),
   });
 
