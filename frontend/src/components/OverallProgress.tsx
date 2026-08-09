@@ -17,29 +17,29 @@ export default function OverallProgress({ data }: Props) {
   const barColor = getStatusColor(overall.percentage);
 
   return (
-    <div className="mb-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-      <h2 className="mb-3 text-sm font-medium text-gray-500">Overall progress</h2>
-      <div className="h-3 w-full overflow-hidden rounded-full bg-gray-100">
+    <div className="mb-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm dark:bg-[#141416] dark:border-gray-800">
+      <h2 className="mb-3 text-sm font-medium text-gray-500 dark:text-gray-400">Overall progress</h2>
+      <div className="h-3 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-[#1f1f24]">
         <div
           className={`h-full rounded-full transition-all duration-500 ${barColor}`}
           style={{ width: `${overall.percentage}%` }}
         />
       </div>
       <div className="mt-2 flex justify-between">
-        <span className="text-xl font-semibold tabular-nums">{overall.percentage}%</span>
+        <span className="text-xl font-semibold tabular-nums text-gray-900 dark:text-white">{overall.percentage}%</span>
       </div>
       <div className="mt-4 grid grid-cols-3 gap-4">
         <div>
-          <p className="text-xs text-gray-400">Current streak</p>
-          <p className="text-lg font-medium tabular-nums">{overall.currentStreak} days</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500">Current streak</p>
+          <p className="text-lg font-medium tabular-nums text-gray-900 dark:text-gray-100">{overall.currentStreak} days</p>
         </div>
         <div>
-          <p className="text-xs text-gray-400">Longest streak</p>
-          <p className="text-lg font-medium tabular-nums">{overall.longestStreak} days</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500">Longest streak</p>
+          <p className="text-lg font-medium tabular-nums text-gray-900 dark:text-gray-100">{overall.longestStreak} days</p>
         </div>
         <div>
-          <p className="text-xs text-gray-400">Habits tracked</p>
-          <p className="text-lg font-medium tabular-nums">{data.habits.length}</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500">Habits tracked</p>
+          <p className="text-lg font-medium tabular-nums text-gray-900 dark:text-gray-100">{data.habits.length}</p>
         </div>
       </div>
     </div>

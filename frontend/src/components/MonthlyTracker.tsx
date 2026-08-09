@@ -12,16 +12,16 @@ export default function MonthlyTracker({ data, onToggle }: Props) {
   const dayLabels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   return (
-    <div className="mb-4 overflow-x-auto rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-      <h2 className="mb-3 text-sm font-medium text-gray-500">Monthly tracker</h2>
+    <div className="mb-4 overflow-x-auto rounded-2xl border border-gray-100 bg-white p-5 shadow-sm dark:bg-[#141416] dark:border-gray-800">
+      <h2 className="mb-3 text-sm font-medium text-gray-500 dark:text-gray-400">Monthly tracker</h2>
       <div className="min-w-max">
         <div className="flex gap-1 mb-1">
-          <div className="w-24 shrink-0" />
+          <div className="w-28 shrink-0" />
           {dayLabels.map((d) => (
             <div
               key={d}
               className={`w-7 text-center text-[11px] tabular-nums ${
-                d % 7 === 0 || d % 7 === 6 ? 'text-gray-400' : 'text-gray-300'
+                d % 7 === 0 || d % 7 === 6 ? 'text-gray-400 dark:text-gray-500' : 'text-gray-300 dark:text-gray-400'
               }`}
             >
               {d}
@@ -30,8 +30,8 @@ export default function MonthlyTracker({ data, onToggle }: Props) {
         </div>
 
         {habits.map((habit) => (
-          <div key={habit.id} className="flex items-center gap-1 mb-1.5">
-            <div className="w-24 shrink-0 truncate text-sm text-gray-600 pr-2">
+          <div key={habit.id} className="flex items-start gap-1 mb-1.5">
+            <div className="w-28 shrink-0 text-sm text-gray-600 pr-2 pt-0.5 break-words leading-tight dark:text-gray-300">
               {habit.icon} {habit.name}
             </div>
             <div className="flex gap-1">
@@ -42,7 +42,7 @@ export default function MonthlyTracker({ data, onToggle }: Props) {
 
                 if (isFuture) {
                   return (
-                    <div key={day} className="h-7 w-7 rounded-md bg-gray-50" />
+                    <div key={day} className="h-7 w-7 rounded-md bg-gray-50 dark:bg-[#16161a]" />
                   );
                 }
 
@@ -53,8 +53,8 @@ export default function MonthlyTracker({ data, onToggle }: Props) {
                     className={`h-7 w-7 rounded-md flex items-center justify-center text-xs font-medium transition-all hover:scale-110 ${
                       done
                         ? 'bg-emerald-500 text-white'
-                        : 'bg-red-50 text-red-400 border border-red-100'
-                    } ${isToday ? 'ring-2 ring-gray-900 ring-offset-1' : ''}`}
+                        : 'bg-red-50 text-red-400 border border-red-100 dark:bg-[#1b1b1f] dark:text-red-300 dark:border-gray-700'
+                    } ${isToday ? 'ring-2 ring-gray-900 ring-offset-1 dark:ring-gray-500' : ''}`}
                   >
                     {done ? '✓' : '✕'}
                   </button>

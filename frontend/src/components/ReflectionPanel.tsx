@@ -32,23 +32,23 @@ export default function ReflectionPanel({ reflection, yesterday, dateStr, onSave
   const isToday = dateStr === new Date().toISOString().split('T')[0];
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm dark:bg-[#141416] dark:border-gray-800">
       {yesterday?.remarks && (
-        <div className="mb-4 rounded-lg bg-blue-50/50 border border-blue-100 p-3">
-          <p className="text-xs font-medium text-gray-600 mb-1">Yesterday's reflection</p>
-          <p className="text-sm text-gray-700">{yesterday.remarks}</p>
+        <div className="mb-4 rounded-lg bg-blue-50/50 border border-blue-100 p-3 dark:bg-[#17202a] dark:border-blue-900">
+          <p className="text-xs font-medium text-gray-600 mb-1 dark:text-gray-400">Yesterday's reflection</p>
+          <p className="text-sm text-gray-700 dark:text-gray-100">{yesterday.remarks}</p>
           {yesterday.tomorrowFocus && (
-            <p className="mt-1 text-xs text-gray-500">Focus: {yesterday.tomorrowFocus}</p>
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Focus: {yesterday.tomorrowFocus}</p>
           )}
         </div>
       )}
 
-      <h2 className="mb-4 text-sm font-medium text-gray-500">
+      <h2 className="mb-4 text-sm font-medium text-gray-500 dark:text-gray-400">
         {isToday ? "Today's reflection" : `Reflection for ${dateStr}`}
       </h2>
 
       <div className="mb-4">
-        <label className="mb-2 block text-xs text-gray-400">Mood</label>
+        <label className="mb-2 block text-xs text-gray-400 dark:text-gray-500">Mood</label>
         <div className="flex gap-2">
           {[
             { key: 'happy', icon: Smile, label: 'Good' },
@@ -92,7 +92,7 @@ export default function ReflectionPanel({ reflection, yesterday, dateStr, onSave
           value={remarks}
           onChange={(e) => setRemarks(e.target.value)}
           placeholder="What happened today?"
-          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-gray-900 resize-y min-h-[80px]"
+          className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-gray-900 resize-y min-h-[80px] dark:border-gray-700 dark:bg-[#121214] dark:text-gray-100 dark:focus:border-gray-400"
         />
       </div>
 
@@ -103,7 +103,7 @@ export default function ReflectionPanel({ reflection, yesterday, dateStr, onSave
           value={tomorrowFocus}
           onChange={(e) => setTomorrowFocus(e.target.value)}
           placeholder="What will you focus on tomorrow?"
-          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-gray-900"
+          className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-gray-900 dark:border-gray-700 dark:bg-[#121214] dark:text-gray-100 dark:focus:border-gray-400"
         />
       </div>
 

@@ -64,18 +64,13 @@ export function useHabits(year: number, month: number) {
   }, [data, year, month]);
 
   const saveReflection = useCallback(async (r: Partial<Reflection>) => {
-    const payload: {
-      date: string;
-      mood?: 'happy' | 'neutral' | 'sad';
-      energy?: number;
-      remarks?: string;
-      tomorrowFocus?: string;
-    } = { date: dateStr };
-
-    if (r.mood != null) payload.mood = r.mood;
-    if (r.energy != null) payload.energy = r.energy;
-    if (r.remarks != null) payload.remarks = r.remarks;
-    if (r.tomorrowFocus != null) payload.tomorrowFocus = r.tomorrowFocus;
+    const payload = {
+      date: dateStr,
+      mood: r.mood === null ? undefined : r.mood,
+      energy: r.energy === null ? undefined : r.energy,
+      remarks: r.remarks === null ? undefined : r.remarks,
+      tomorrowFocus: r.tomorrowFocus === null ? undefined : r.tomorrowFocus,
+    };
 
     await api.reflections.save(payload);
     setReflection((prev) => ({ ...prev, ...payload } as Reflection));
