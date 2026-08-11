@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">HIT</string>
+    <string name="title_activity_main">HIT</string>
+    <string name="package_name">com.hammad.HIT</string>
+    <string name="custom_url_scheme">com.hammad.HIT</string>
+</resources>

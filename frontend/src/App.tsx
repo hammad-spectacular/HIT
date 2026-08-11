@@ -1,30 +1,28 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './hooks/useAuth';
+import { useState } from 'react';
 import { useTheme } from './hooks/useTheme';
-import Dashboard from './components/Dashboard';
-import LoginPage from './components/LoginPage';
+import Navigation, { Tab } from './components/Navigation';
+import TodayPage from './components/TodayPage';
+import HabitsPage from './components/HabitsPage';
+import ProgressPage from './components/ProgressPage';
+import ReviewPage from './components/ReviewPage';
 
 export default function App() {
-  const { user, loading } = useAuth();
   const { theme, toggle } = useTheme();
-
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-gray-50 dark:bg-[#0a0a0b]">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-gray-900 dark:border-gray-700 dark:border-t-gray-100" />
-      </div>
-    );
-  }
+  const [activeTab, setActiveTab] = useState<Tab>('today');
 
   return (
-    <Routes>
-      <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
-      <Route
-        path="/*"
-        element={
-          user ? <Dashboard theme={theme} onToggleTheme={toggle} /> : <Navigate to="/login" />
-        }
-      />
-    </Routes>
+    <>
+      {activeTab === 'today' && <TodayPage theme={theme} onToggleTheme={toggle} />}
+      {activeTab === 'habits' && <HabitsPage theme={theme} onToggleTheme={toggle} />}
+      {activeTab === 'progress' && <ProgressPage theme={theme} onToggleTheme={toggle} />}
+      {activeTab === 'review' && (
+        <ReviewPage
+          theme={theme}
+          onToggleTheme={toggle}
+          onGoToToday={() => setActiveTab('today')}
+        />
+      )}
+      <Navigation active={activeTab} onChange={setActiveTab} />
+    </>
   );
 }

@@ -1,13 +1,11 @@
-import { useMemo, useRef, useState, useEffect } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, Download, Loader2, Moon, Plus, Settings, Sun, Upload } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Calendar, ChevronLeft, ChevronRight, Loader2, Moon, Plus, Settings, Sun, Download, Upload } from 'lucide-react';
 import { storage } from '../lib/storage';
 import { useHabits } from '../hooks/useHabits';
 import TodayHabits from './TodayHabits';
 import TodayProgress from './TodayProgress';
-import HabitList from './HabitList';
 import MonthlyTracker from './MonthlyTracker';
 import Insights from './Insights';
-import MonthlyReview from './MonthlyReview';
 import ReflectionPanel from './ReflectionPanel';
 import AddHabitModal from './AddHabitModal';
 import SectionCard from './SectionCard';
@@ -33,7 +31,7 @@ function addDays(dateStr: string, days: number) {
   return toDateString(date);
 }
 
-export default function Dashboard({ theme, onToggleTheme }: Props) {
+export default function TodayPage({ theme, onToggleTheme }: Props) {
   const today = toDateString(new Date());
   const [selectedDate, setSelectedDate] = useState(today);
   const selected = fromDateString(selectedDate);
@@ -45,6 +43,7 @@ export default function Dashboard({ theme, onToggleTheme }: Props) {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const importInputRef = useRef<HTMLInputElement | null>(null);
   const settingsMenuRef = useRef<HTMLDivElement | null>(null);
+
   const {
     data,
     reflection,
@@ -53,20 +52,17 @@ export default function Dashboard({ theme, onToggleTheme }: Props) {
     error,
     pendingRecordKeys,
     savingReflection,
-    deletingHabitIds,
     toggleRecord,
     saveReflection,
-    archiveHabit,
-    deleteHabit,
     refresh,
   } = useHabits(year, month, selectedDate);
 
-  const readableDate = useMemo(() => {
+  const readableDate = (() => {
     if (selectedDate === today) return 'Today';
     const yesterday = addDays(today, -1);
     if (selectedDate === yesterday) return 'Yesterday';
     return selected.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-  }, [selectedDate, today, selected]);
+  })();
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, type });
@@ -126,20 +122,6 @@ export default function Dashboard({ theme, onToggleTheme }: Props) {
     }
   };
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target as Node)) {
-        setShowSettingsMenu(false);
-      }
-    }
-    if (showSettingsMenu) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showSettingsMenu]);
-
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-[#0a0a0b]">
@@ -164,10 +146,10 @@ export default function Dashboard({ theme, onToggleTheme }: Props) {
   const isToday = selectedDate === today;
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-[#0a0a0b] dark:text-gray-100">
+    <div className="min-h-screen bg-gray-50 pb-20 text-gray-900 dark:bg-[#0a0a0b] dark:text-gray-100">
       {toast && <Toast message={toast.message} type={toast.type} />}
 
-      <header className="sticky top-0 z-40 border-b border-gray-200/80 bg-white/95 px-3 py-2.5 sm:px-4 sm:py-3 backdrop-blur dark:border-gray-800 dark:bg-[#0a0a0b]/95 lg:px-8">
+      <header className="sticky top-0 z-40 border-b border-gray-200/80 bg-white/95 px-3 py-2.5 backdrop-blur dark:border-gray-800 dark:bg-[#0a0a0b]/95 sm:px-4 sm:py-3 lg:px-8">
         <div className="mx-auto flex max-w-[1100px] items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <div className="flex h-9 items-center rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-[#151519]">
@@ -206,8 +188,8 @@ export default function Dashboard({ theme, onToggleTheme }: Props) {
           </div>
 
           <div className="flex items-center gap-2">
-            <button 
-              onClick={() => setShowAddModal(true)} 
+            <button
+              onClick={() => setShowAddModal(true)}
               className="btn-primary h-9 px-4"
               title="Add Habit"
             >
@@ -265,12 +247,12 @@ export default function Dashboard({ theme, onToggleTheme }: Props) {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-[1100px] px-3 py-6 sm:px-4 sm:py-10 pb-20 lg:px-8">
+      <main className="mx-auto w-full max-w-[1100px] px-3 py-6 sm:px-4 sm:py-10 lg:px-8">
         {data && (
           <>
             {data.habits.length === 0 ? (
-              <div className="py-10 sm:py-16 text-center">
-                <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+              <div className="py-10 text-center sm:py-16">
+                <h1 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 sm:text-2xl">
                   What do I need to do today?
                 </h1>
                 <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Add your first habit to get started</p>
@@ -280,11 +262,11 @@ export default function Dashboard({ theme, onToggleTheme }: Props) {
               </div>
             ) : (
               <div className="space-y-10 sm:space-y-16">
-                {/* Today — DO */}
+                {/* Today */}
                 <div>
                   <div className="mb-5 sm:mb-8">
                     <p className="section-label">Today</p>
-                    <h1 className="mt-1.5 sm:mt-2 text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+                    <h1 className="mt-1.5 sm:mt-2 text-xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-2xl">
                       What do I need to do today?
                     </h1>
                   </div>
@@ -303,21 +285,9 @@ export default function Dashboard({ theme, onToggleTheme }: Props) {
                   </SectionCard>
                 </div>
 
-                {/* Today's Progress — separate card */}
+                {/* Today's Progress */}
                 <SectionCard title="Today's Progress" subtitle="How you're doing so far today.">
                   <TodayProgress habits={data.habits} selectedDate={selectedDate} />
-                </SectionCard>
-
-                {/* Your Habits — MANAGE */}
-                <SectionCard title="Your Habits" subtitle="Manage your habit list." variant="manage">
-                  <HabitList
-                    habits={data.habits}
-                    deletingHabitIds={deletingHabitIds}
-                    onArchive={archiveHabit}
-                    onDelete={deleteHabit}
-                    onArchived={() => showToast('Habit archived')}
-                    onDeleted={() => showToast('Habit deleted')}
-                  />
                 </SectionCard>
 
                 {/* Monthly History */}
@@ -330,21 +300,12 @@ export default function Dashboard({ theme, onToggleTheme }: Props) {
                   />
                 </SectionCard>
 
-                {/* Insights — quick snapshot */}
+                {/* Insights */}
                 <SectionCard title="Insights" subtitle="Quick stats from this month." variant="insights">
                   <Insights data={data} />
                 </SectionCard>
 
-                {/* Monthly Review — actionable */}
-                <SectionCard
-                  title="Monthly Review"
-                  subtitle="What to celebrate, fix, and focus on next."
-                  variant="review"
-                >
-                  <MonthlyReview year={year} month={month} />
-                </SectionCard>
-
-                {/* Reflection — journal */}
+                {/* Reflection */}
                 <SectionCard title="Today's Reflection" subtitle="This is where you write about your day." variant="journal">
                   <ReflectionPanel
                     reflection={reflection}
