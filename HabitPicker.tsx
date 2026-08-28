@@ -75,8 +75,8 @@ export default function HabitPicker({ onAdd, onBack, loading }: Props) {
   const selectedCount = selected.size;
 
   return (
-    <div className="fixed inset-x-0 top-0 z-50 flex h-[100dvh] flex-col bg-gray-50 dark:bg-[#0a0a0b]">
-      <div className="flex flex-1 flex-col overflow-hidden">
+    <div className="fullpicker-screen">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         {/* Header */}
         <div className="flex-shrink-0 px-4 py-4">
           <div className="mx-auto max-w-md flex items-center gap-3">
@@ -94,7 +94,7 @@ export default function HabitPicker({ onAdd, onBack, loading }: Props) {
         </div>
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto px-4 pb-32">
+        <div className="fullpicker-body px-4 pb-6">
           <div className="mx-auto max-w-md">
             {/* Preset grid */}
             <div className="mb-6 grid grid-cols-2 gap-3">
@@ -201,6 +201,34 @@ export default function HabitPicker({ onAdd, onBack, loading }: Props) {
             </button>
           </div>
 
+            {/* Save button — part of the scrollable content */}
+            {selectedCount > 0 && (
+              <div className="mb-4">
+                <button
+                  onClick={handleAddPresets}
+                  disabled={loading}
+                  className="btn-primary w-full py-3 text-base"
+                >
+                  {loading ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    `Add ${selectedCount} Habit${selectedCount > 1 ? 's' : ''}`
+                  )}
+                </button>
+              </div>
+            )}
+
+            {selectedCount === 0 && !showCustom && (
+              <div className="mb-4">
+                <button
+                  disabled
+                  className="btn-primary w-full py-3 text-base opacity-50 cursor-not-allowed"
+                >
+                  Select to continue
+                </button>
+              </div>
+            )}
+
             {/* Custom habit form */}
             {showCustom && showCustomConfirm && (
               <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-[#141418]">
@@ -269,35 +297,6 @@ export default function HabitPicker({ onAdd, onBack, loading }: Props) {
               <p className="text-center text-sm text-gray-400 dark:text-gray-500">
                 Pick habits or add your own
               </p>
-            )}
-          </div>
-        </div>
-
-        {/* Sticky bottom action area */}
-        <div className="flex-shrink-0 border-t border-gray-200/80 bg-white px-4 py-4 dark:border-gray-800 dark:bg-[#111114]" style={{ paddingBottom: 'max(16px, env(safe-area-inset-bottom, 16px))' }}>
-          <div className="mx-auto max-w-md">
-            {/* Add button */}
-            {selectedCount > 0 && (
-              <button
-                onClick={handleAddPresets}
-                disabled={loading}
-                className="btn-primary w-full py-3 text-base"
-              >
-                {loading ? (
-                  <Loader2 size={16} className="animate-spin" />
-                ) : (
-                  `Add ${selectedCount} Habit${selectedCount > 1 ? 's' : ''}`
-                )}
-              </button>
-            )}
-
-            {selectedCount === 0 && !showCustom && (
-              <button
-                disabled
-                className="btn-primary w-full py-3 text-base opacity-50 cursor-not-allowed"
-              >
-                Select to continue
-              </button>
             )}
           </div>
         </div>
